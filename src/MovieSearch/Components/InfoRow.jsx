@@ -8,11 +8,19 @@ type Props = {
   item: MovieTypes
 };
 
-export default function InfoRow({ item }: Props) {
+export default function InfoRow({ item, index }: Props) {
   return (
-    <div className="column has-text-centered">
-      <img src={item.poster} alt={item.title} />
-      <h2>{item.title}</h2>
+    <div className="column is-one-third-desktop is-half-mobile is-half-tablet has-text-centered">
+      <figure className="image is-4by5">
+        {item.poster === "N/A" ? (
+          <img src="/images/no-poster.jpg" alt={item.title || "No Title"} />
+        ) : (
+          <img src={item.poster} alt={item.title} />
+        )}
+      </figure>
+      <h2>
+        <strong>{item.title}</strong>
+      </h2>
     </div>
   );
 }

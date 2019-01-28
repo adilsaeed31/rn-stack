@@ -1,4 +1,5 @@
 import { MOVIE_PROGRESS, MOVIE_SUCCESS, MOVIE_FAILURE } from "../Constants";
+import chunk from "lodash/chunk";
 
 const initialState = {
   records: [],
@@ -16,14 +17,13 @@ const MovieSearchReducer = (state = initialState, { type, payload }) => {
       };
     case MOVIE_SUCCESS:
       return {
-        ...state,
-        records: [...state.records, ...payload],
+        records: chunk(payload, 3),
         isLoading: false,
         hasError: false
       };
     case MOVIE_FAILURE:
       return {
-        ...state,
+        records: [],
         isLoading: false,
         hasError: true
       };

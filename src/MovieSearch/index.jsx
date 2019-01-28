@@ -10,6 +10,7 @@ import { movieSuccess, movieProgress, movieFailure } from "./Actions";
 // Components
 import InfoRow from "./Components/InfoRow";
 import NothingFound from "./Components/NothingFound";
+import { DebounceInput } from "react-debounce-input";
 
 // Type assignment
 import { MovieTypes } from "./Types";
@@ -41,11 +42,10 @@ class MovieSearch extends React.PureComponent<Props, State> {
     this.props.dispatch(movieProgress());
     // API call to fetch data
     Fetcher.get({ search: q })
-      .then(res => {
+      .then(async res => {
         if (res.Response === "True") {
-          let data = [];
           // Process the modal entity against data here
-          data = res.Search.map(item => new MovieSearchModel(item));
+          let data = await res.Search.map(item => new MovieSearchModel(item));
           // dispatch data to redux store for props mapping
           this.props.dispatch(movieSuccess(data));
           this.setState({ isFirstLoad: false });
@@ -67,20 +67,37 @@ class MovieSearch extends React.PureComponent<Props, State> {
   };
 
   onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+    this.setState(
+      {
+        q: e.target.value
+      },
+      () => this.watchProps()
+    );
   };
 
-  renderMovies = () => {
-    return this.props.records.map((item, key) => (
-      <InfoRow key={key} item={item} />
+  watchProps = () => {
+    this.handleSearch();
+  };
+
+  renderItems = items => {
+    return items.map((item, key) => (
+      <InfoRow key={key} index={key} item={item} />
     ));
   };
 
+  renderMovies = () => {
+    return this.props.records.map((item, key) => {
+      return (
+        <div key={key} className="columns is-mobile">
+          {this.renderItems(item)}
+        </div>
+      );
+    });
+  };
+
   render() {
-    let { q, isFirstLoad } = this.state;
-    let { records } = this.props;
+    let { isFirstLoad } = this.state;
+    let { records, isLoading } = this.props;
     return (
       <React.Fragment>
         <section className="section isBG">
@@ -100,60 +117,32 @@ class MovieSearch extends React.PureComponent<Props, State> {
               <div className="column is-4 is-offset-4">
                 <div className="field">
                   <div className="control">
-                    <input
+                    <DebounceInput
                       className="input"
                       type="text"
                       name="q"
+                      minLength={3}
+                      debounceTimeout={300}
                       onChange={this.onChange}
-                      value={q}
                       placeholder="Search for Movie"
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="columns">
-              <div className="column is-4 is-offset-4">
-                <button
-                  className="button is-success"
-                  onClick={this.handleSearch}
-                >
-                  <span className="icon is-small">
-                    <i className="fas fa-search" />
-                  </span>
-                  <span>Search</span>
-                </button>
+                {isLoading && (
+                  <p className="has-text-centered has-text-white">
+                    Loading Please wait ...!
+                  </p>
+                )}
               </div>
             </div>
           </div>
-          {!isFirstLoad && (
-            <div className="container">
-              <div className="columns">
-                <div className="column is-offset-4-desktop is-one-third-desktop is-full-touch">
-                  <button
-                    className="button is-fullwidth"
-                    onClick={this.handleReset}
-                  >
-                    <span className="icon is-small">
-                      <i className="fas fa-undo" />
-                    </span>
-                    <span>Reset</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </section>
-        {records.length > 0 ? (
+        {records.length > 0 && !isFirstLoad ? (
           <section className="section">
-            <div className="container is-bottom-2">
-              <div className="columns has-background-light is-i-bottom-2">
-                {this.renderMovies()}
-              </div>
-            </div>
+            <div className="container">{this.renderMovies()}</div>
           </section>
         ) : (
-          !isFirstLoad && <NothingFound />
+          records.length === 0 && !isFirstLoad && <NothingFound />
         )}
       </React.Fragment>
     );
