@@ -1,0 +1,10 @@
+{
+  "name": "AlTayerDigitalTest",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && yarn && yarn start",
+    "frontend": "cd frontend && yarn && yarn start",
+    "start": "yarn backend & yarn frontend"
+  }
+}
