@@ -1,0 +1,57 @@
+version: "3.4"
+services:
+  backend:
+    build:
+      context: backend
+    depends_on:
+      - db
+      - frontend
+    ports:
+      - 8000:8000
+    expose: 
+      - 8000
+    volumes:
+      - ./backend:/usr/src/app/server
+      - backend-node-modules:/usr/src/app/server/node_modules
+    environment:
+      NODE_ENV: development
+      DB_URL: rn-stack_db_1
+    stdin_open: true
+    tty: true
+  frontend:
+    build:
+      context: frontend
+      target: development
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - ./frontend:/usr/src/app/client
+      - frontend-node-modules:/usr/src/app/client/node_modules
+    environment:
+      NODE_ENV: development
+      API_URL: http://localhost:8000
+    stdin_open: true
+    tty: true
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'rnstack'
+      MYSQL_USER: 'rnstack'
+      MYSQL_PASSWORD: 'rnstack'
+      MYSQL_ROOT_PASSWORD: 'rnstack'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - dbdata:/var/lib/mysql
+    stdin_open: true
+    tty: true
+volumes:
+  dbdata:
+  frontend-node-modules:
+  backend-node-modules:
