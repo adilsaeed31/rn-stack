@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "rnstack",
+    "password": "rnstack",
+    "database": "rnstack",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "rnstack",
+    "password": "rnstack",
+    "database": "rnstack",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "rnstack",
+    "password": "rnstack",
+    "database": "rnstack",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

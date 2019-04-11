@@ -1,10 +1,10 @@
 const express = require("express")
 const router = express.Router();
-const { User } = require('../../sequelize')
+const { db } = require('../../db/models')
 
 router.get("/signin", signIn);
 
-router.get("/signup", signUp)
+router.get("/signup", signUp);
 
 function signUp(req, res) {
   res.send({
@@ -17,8 +17,8 @@ function signUp(req, res) {
 }
 
 function signIn(req, res) {
-  User.findAll().then(users => function() {
-    if (users) {
+  db.User.findAll().then(users => {
+    if (users.length > 0) {
       res.send({
         status: 200,
         message: "Logged In",
