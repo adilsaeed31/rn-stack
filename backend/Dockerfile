@@ -3,9 +3,12 @@ RUN mkdir -p /usr/src/app/server
 WORKDIR /usr/src/app/server
 COPY package.json ./
 
-RUN npm install
+RUN npm install yarn -g
 
-RUN npm install nodemon -g
+RUN yarn install
 
-CMD ["nodemon", "npm", "start"]
+RUN yarn global add nodemon
 
+RUN yarn global add sequelize-cli
+
+CMD ["nodemon", "npm", "start"] 
