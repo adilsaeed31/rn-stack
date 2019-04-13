@@ -37,7 +37,7 @@ function signIn(req, res) {
 					res.send({ status: 422, message: 'Invalid Password' });
 				}
 			} else {
-				//res.send({ status: 422, message: 'User not found' });
+				res.send({ status: 422, message: 'User not found' });
 			}
 		})
 		.catch((err) => {
