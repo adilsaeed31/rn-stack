@@ -3,7 +3,7 @@
 		"username": "rnstack",
 		"password": "rnstack",
 		"database": "rnstack",
-		"host": "rn-stack_db_1",
+		"host": "localhost",
 		"dialect": "mysql",
 		"port": "3306"
 	},
@@ -11,7 +11,7 @@
 		"username": "rnstack",
 		"password": "rnstack",
 		"database": "rnstack",
-		"host": "rn-stack_db_1",
+		"host": "localhost",
 		"dialect": "mysql",
 		"port": "3306"
 	},
@@ -19,7 +19,7 @@
 		"username": "rnstack",
 		"password": "rnstack",
 		"database": "rnstack",
-		"host": "rn-stack_db_1",
+		"host": "localhost",
 		"dialect": "mysql",
 		"port": "3306"
 	}

@@ -7,7 +7,21 @@ import { connect } from 'react-redux';
 import { authSuccess, authFailure, authLoading } from './Actions';
 
 // antd components
-import { Layout, Row, Col, Form, Icon, Input, Button, Checkbox, Typography, notification } from 'antd';
+import {
+	Form,
+	Input,
+	Tooltip,
+	Icon,
+	Cascader,
+	Checkbox,
+	Button,
+	AutoComplete,
+	Layout,
+	Row,
+	Col,
+	Typography,
+	notification
+} from 'antd';
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
@@ -18,9 +32,37 @@ type Props = {
 	isLoading: boolean
 };
 // State Types
-type State = {};
+type State = {
+	confirmDirty: boolean	
+};
 
 class Register extends React.PureComponent<Props, State> {
+	state = {
+		confirmDirty: false
+	  };
+	  
+	handleConfirmBlur = (e) => {
+		const value = e.target.value;
+		this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+	  }
+	
+	compareToFirstPassword = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && value !== form.getFieldValue('password')) {
+		  callback('Confirm password that you enter is inconsistent!');
+		} else {
+		  callback();
+		}
+	}
+	
+	validateToNextPassword = (rule, value, callback) => {
+		const form = this.props.form;
+		if (value && this.state.confirmDirty) {
+		  form.validateFields(['confirm'], { force: true });
+		}
+		callback();
+	}
+
 	handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -62,6 +104,30 @@ class Register extends React.PureComponent<Props, State> {
 
 	render() {
 		const { isLoading, form: { getFieldDecorator } } = this.props;
+	
+		const formItemLayout = {
+			labelCol: {
+			  xs: { span: 24 },
+			  sm: { span: 8 },
+			},
+			wrapperCol: {
+			  xs: { span: 24 },
+			  sm: { span: 16 },
+			},
+		  };
+
+		  const tailFormItemLayout = {
+			wrapperCol: {
+			  xs: {
+				span: 24,
+				offset: 0,
+			  },
+			  sm: {
+				span: 16,
+				offset: 8,
+			  },
+			},
+		  };
 
 		return (
 			<Layout>
@@ -79,45 +145,84 @@ class Register extends React.PureComponent<Props, State> {
 				<Content>
 					<Row type="flex" justify="center" align="middle">
 						<Col span={12}>
-							<Form onSubmit={this.handleSubmit} className="login-form">
-								<Form.Item>
+							<Form {...formItemLayout} onSubmit={this.handleSubmit} className="register-form">
+								<Form.Item
+									label={
+										<span>
+											Full Name&nbsp;
+											<Tooltip title="What do you want others to call you?">
+												<Icon type="question-circle-o" />
+											</Tooltip>
+										</span>
+									}
+								>
+									{getFieldDecorator('name', {
+										rules: [
+											{ required: true, message: 'Please input your Full Name!', whitespace: true }
+										]
+									})(<Input />)}
+								</Form.Item>
+
+								<Form.Item label="E-mail">
 									{getFieldDecorator('email', {
-										rules: [ { required: true, message: 'Please input your email!' } ]
-									})(
-										<Input
-											prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-											placeholder="email"
-										/>
-									)}
+										rules: [
+											{
+												type: 'email',
+												message: 'The input is not valid E-mail!'
+											},
+											{
+												required: true,
+												message: 'Please input your E-mail!'
+											}
+										]
+									})(<Input />)}
 								</Form.Item>
-								<Form.Item>
+								<Form.Item label="Password">
 									{getFieldDecorator('password', {
-										rules: [ { required: true, message: 'Please input your Password!' } ]
+										rules: [
+											{
+												required: true,
+												message: 'Please input your password!'
+											},
+											{
+												validator: this.validateToNextPassword
+											}
+										]
+									})(<Input type="password" />)}
+								</Form.Item>
+								<Form.Item label="Confirm Password">
+									{getFieldDecorator('confirm', {
+										rules: [
+											{
+												required: true,
+												message: 'Please confirm your password!'
+											},
+											{
+												validator: this.compareToFirstPassword
+											}
+										]
+									})(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+								</Form.Item>
+
+								<Form.Item {...tailFormItemLayout}>
+									{getFieldDecorator('agreement', {
+										valuePropName: 'checked',
+										rules: [
+											{
+												required: true,
+												message: 'Are you agree with our agreement?'
+											}
+										]
 									})(
-										<Input
-											prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-											type="password"
-											placeholder="Password"
-										/>
+										<Checkbox>
+											I have read the <a href="">agreement</a>
+										</Checkbox>
 									)}
 								</Form.Item>
-								<Form.Item>
-									{getFieldDecorator('remember', {
-										valuePropName: 'checked',
-										initialValue: true
-									})(<Checkbox>Remember me</Checkbox>)}
-									<a className="login-form-forgot" href="/auth/forgotpassword">
-										Forgot password
-									</a>
-									<Button
-										disabled={isLoading}
-										type="primary"
-										htmlType="submit"
-										className="login-form-button"
-									>
-										{!isLoading ? 'Log in' : 'Authenticating ...'}
+								<Form.Item {...tailFormItemLayout}>
+									<Button type="primary" htmlType="submit">
+										Register
 									</Button>
-									Or <Link to="/register">Register</Link>
 								</Form.Item>
 							</Form>
 						</Col>
@@ -139,6 +244,6 @@ const mapStateToProps = ({ AuthReducer }) => ({
 	data: AuthReducer.data,
 	isLoading: AuthReducer.isLoading
 });
-const WrappedAuthRegisterForm = Form.create({ name: 'auth_login' })(Register);
+const WrappedAuthRegisterForm = Form.create({ name: 'auth_register' })(Register);
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedAuthRegisterForm);

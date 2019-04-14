@@ -10,8 +10,8 @@ class App extends React.Component {
 		return (
 			<Router>
 				<Route exact path="/" component={Auth} />
-				<Route exact path="/register" component={Register} />
-				<PrivateRoute path="/dashboard" component={<div>Dashboard</div>} />
+				<Route path="/register" component={Register} />
+				<PrivateRoute path="/dashboard" component={Dashboard} />
 			</Router>
 		);
 	}
@@ -23,7 +23,7 @@ function PrivateRoute({ component: Component, ...rest }) {
 			{...rest}
 			render={(props) =>
 				true ? (
-					<Component exact {...props} />
+					<Component {...props} />
 				) : (
 					<Redirect
 						to={{
@@ -36,4 +36,7 @@ function PrivateRoute({ component: Component, ...rest }) {
 	);
 }
 
+function Dashboard() {
+	return <div>Dashboard</div>;
+}
 export default App;
