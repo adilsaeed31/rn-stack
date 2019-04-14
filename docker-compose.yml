@@ -16,6 +16,7 @@ services:
     environment:
       NODE_ENV: development
       DB_URL: rn-stack_db_1
+      API_URL: rn-stack_backend_1
     stdin_open: true
     tty: true
   frontend:
@@ -31,7 +32,7 @@ services:
       - frontend-node-modules:/usr/src/app/client/node_modules
     environment:
       NODE_ENV: development
-      API_URL: http://localhost:8000
+      API_URL: http://localhost:8000/
     stdin_open: true
     tty: true
   db:
@@ -44,9 +45,9 @@ services:
       MYSQL_ROOT_PASSWORD: 'rnstack'
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     ports:
-      - 33060:3306
+      - 3306:3306
     expose:
-      - 33060
+      - 3306
     volumes:
       - dbdata:/var/lib/mysql
     stdin_open: true

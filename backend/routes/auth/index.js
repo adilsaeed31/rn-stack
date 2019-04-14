@@ -9,22 +9,22 @@ router.post('/signup', signUp);
 
 function signUp(req, res) {
 	db.User
-		.create({ ...req.query })
+		.create({ ...req.body })
 		.then((user) => {
 			if (user) {
-				res.send({
+				res.json({
 					status: 200,
 					message: 'Registered Successfully'
 				});
 			} else {
-				res.send({ status: 500, message: 'Registration Error' });
+				res.json({ status: 500, message: 'Registration Error' });
 			}
 		})
-		.catch((err) => res.send({ status: 500, message: 'Registration Error' }));
+		.catch((err) => res.json({ status: 500, message: 'Registration Error' }));
 }
 
 function signIn(req, res) {
-	let { email, password } = req.query;
+	let { email, password } = req.body;
 	db.User
 		.findOne({
 			where: { email }
@@ -32,17 +32,17 @@ function signIn(req, res) {
 		.then((user) => {
 			if (user) {
 				if (bcrypt.compareSync(password, user.password)) {
-					res.send({ status: 200, message: 'User authenticated' });
+					res.json({ status: 200, message: 'Logged In' });
 				} else {
-					res.send({ status: 422, message: 'Invalid Password' });
+					res.json({ status: 422, message: 'Invalid Password' });
 				}
 			} else {
-				res.send({ status: 422, message: 'User not found' });
+				res.json({ status: 422, message: 'User not found' });
 			}
 		})
 		.catch((err) => {
 			console.log(err, 'err');
-			res.send({ status: 500, message: err });
+			res.json({ status: 500, message: 'Internal Server Error' });
 		});
 }
 

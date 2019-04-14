@@ -1,24 +1,27 @@
 const createError = require('http-errors');
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
-const indexRouter = require('./routes');
-
 const app = express();
 
-app.use(express.json());
+// use cors
+app.use(cors());
+
 // Express logger
 app.use(logger('dev'));
+
+// Cookie Parser
+app.use(cookieParser());
 
 // Express middleware that allows POSTing data
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Cookie Parser
-app.use(cookieParser());
+const indexRouter = require('./routes');
 
 app.use(indexRouter);
 

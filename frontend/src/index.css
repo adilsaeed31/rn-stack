@@ -1,54 +1,21 @@
-@charset "UTF-8";
-@import "../node_modules/bulma/css/bulma.min.css";
+@import '~antd/dist/antd.css';
 
-.is-half-width {
-  width: 50%;
+.ant-layout-content {
+	height: calc(100vh - 133px);
 }
-
-.is-bottom-2 {
-  margin-bottom: 20px;
+.login-form {
+	max-width: 300px;
+	margin: 30% auto;
 }
-
-.is-i-bottom-2 {
-  margin-bottom: 20px !important;
+.login-form-forgot {
+	float: right;
 }
-
-.isBG {
-  background: #1c92d2;
-  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #f2fcfe, #1c92d2);
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to left, #f2fcfe, #1c92d2);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+.login-form-button {
+	width: 100%;
 }
-
-.has-margin-right {
-  margin-right: 10px;
+.logo {
+	color: white !important;
 }
-
-.fade-enter {
-  opacity: 0.01;
-}
-
-.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.fade-leave {
-  opacity: 1;
-}
-
-.fade-leave.fade-leave-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
-}
-
-.fade-appear {
-  opacity: 0.01;
-}
-
-.fade-appear.fade-appear-active {
-  opacity: 1;
-  transition: opacity 0.5s ease-in;
+.has-margin-1 {
+	margin-top: 10px;
 }
