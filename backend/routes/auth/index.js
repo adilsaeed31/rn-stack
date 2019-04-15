@@ -8,8 +8,14 @@ router.post('/signin', signIn);
 router.post('/signup', signUp);
 
 function signUp(req, res) {
+	let userData = {
+		name: req.body.name,
+		email: req.body.email,
+		password: bcrypt.hashSync(req.body.password, 10)
+	};
+
 	db.User
-		.create({ ...req.body })
+		.create(userData)
 		.then((user) => {
 			if (user) {
 				res.json({

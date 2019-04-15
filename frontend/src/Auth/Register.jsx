@@ -7,21 +7,7 @@ import { connect } from 'react-redux';
 import { authSuccess, authFailure, authLoading } from './Actions';
 
 // antd components
-import {
-	Form,
-	Input,
-	Tooltip,
-	Icon,
-	Cascader,
-	Checkbox,
-	Button,
-	AutoComplete,
-	Layout,
-	Row,
-	Col,
-	Typography,
-	notification
-} from 'antd';
+import { Form, Input, Tooltip, Icon, Checkbox, Button, Layout, Row, Col, Typography, notification } from 'antd';
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
 
@@ -33,35 +19,35 @@ type Props = {
 };
 // State Types
 type State = {
-	confirmDirty: boolean	
+	confirmDirty: boolean
 };
 
 class Register extends React.PureComponent<Props, State> {
 	state = {
 		confirmDirty: false
-	  };
-	  
+	};
+
 	handleConfirmBlur = (e) => {
 		const value = e.target.value;
 		this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-	  }
-	
+	};
+
 	compareToFirstPassword = (rule, value, callback) => {
 		const form = this.props.form;
 		if (value && value !== form.getFieldValue('password')) {
-		  callback('Confirm password that you enter is inconsistent!');
+			callback('Confirm password that you enter is inconsistent!');
 		} else {
-		  callback();
+			callback();
 		}
-	}
-	
+	};
+
 	validateToNextPassword = (rule, value, callback) => {
 		const form = this.props.form;
 		if (value && this.state.confirmDirty) {
-		  form.validateFields(['confirm'], { force: true });
+			form.validateFields([ 'confirm' ], { force: true });
 		}
 		callback();
-	}
+	};
 
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -69,6 +55,7 @@ class Register extends React.PureComponent<Props, State> {
 		this.props.dispatch(authLoading({ isLoading: true }));
 
 		this.props.form.validateFields((err, values) => {
+			console.log(err, 'err');
 			if (!err) {
 				fetch(`http://localhost:8000/auth/signup`, {
 					method: 'POST',
@@ -83,8 +70,11 @@ class Register extends React.PureComponent<Props, State> {
 						if (res.status === 200) {
 							notification.success({
 								message: 'Success',
-								description: res.message
+								description: res.message + '. You can login now!',
+								duration: 1
 							});
+							this.props.form.resetFields();
+							this.props.history.push('/');
 						} else {
 							notification.error({
 								message: 'Error',
@@ -104,30 +94,30 @@ class Register extends React.PureComponent<Props, State> {
 
 	render() {
 		const { isLoading, form: { getFieldDecorator } } = this.props;
-	
+
 		const formItemLayout = {
 			labelCol: {
-			  xs: { span: 24 },
-			  sm: { span: 8 },
+				xs: { span: 24 },
+				sm: { span: 8 }
 			},
 			wrapperCol: {
-			  xs: { span: 24 },
-			  sm: { span: 16 },
-			},
-		  };
+				xs: { span: 24 },
+				sm: { span: 16 }
+			}
+		};
 
-		  const tailFormItemLayout = {
+		const tailFormItemLayout = {
 			wrapperCol: {
-			  xs: {
-				span: 24,
-				offset: 0,
-			  },
-			  sm: {
-				span: 16,
-				offset: 8,
-			  },
-			},
-		  };
+				xs: {
+					span: 24,
+					offset: 0
+				},
+				sm: {
+					span: 16,
+					offset: 8
+				}
+			}
+		};
 
 		return (
 			<Layout>
@@ -158,7 +148,11 @@ class Register extends React.PureComponent<Props, State> {
 								>
 									{getFieldDecorator('name', {
 										rules: [
-											{ required: true, message: 'Please input your Full Name!', whitespace: true }
+											{
+												required: true,
+												message: 'Please input your Full Name!',
+												whitespace: true
+											}
 										]
 									})(<Input />)}
 								</Form.Item>
@@ -205,8 +199,8 @@ class Register extends React.PureComponent<Props, State> {
 								</Form.Item>
 
 								<Form.Item {...tailFormItemLayout}>
-									{getFieldDecorator('agreement', {
-										valuePropName: 'checked',
+									{getFieldDecorator('checked', {
+										valuePropName: 'agreement',
 										rules: [
 											{
 												required: true,
@@ -215,14 +209,17 @@ class Register extends React.PureComponent<Props, State> {
 										]
 									})(
 										<Checkbox>
-											I have read the <a href="">agreement</a>
+											I have read the <Link to="/">agreement</Link>
 										</Checkbox>
 									)}
 								</Form.Item>
 								<Form.Item {...tailFormItemLayout}>
-									<Button type="primary" htmlType="submit">
+									<Button disabled={isLoading} type="primary" htmlType="submit">
 										Register
 									</Button>
+									<Link to="/" style={{ float: 'right' }}>
+										Back to Login
+									</Link>
 								</Form.Item>
 							</Form>
 						</Col>

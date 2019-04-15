@@ -5,7 +5,7 @@ const userRoutes = require('./user');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.send({ message: 'Welcome to the React Node Stack API v1.0', status: 200 });
+	res.send({ message: 'Welcome to the #OrderTogether API v1.0', status: 200 });
 });
 
 router.use('/auth', authRoutes);

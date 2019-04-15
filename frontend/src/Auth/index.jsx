@@ -41,8 +41,10 @@ class Auth extends React.PureComponent<Props, State> {
 						if (res.status === 200) {
 							notification.success({
 								message: 'Success',
-								description: res.message
+								description: res.message,
+								duration: 1
 							});
+							this.props.history.push('/dashboard');
 						} else {
 							notification.error({
 								message: 'Error',
@@ -106,9 +108,6 @@ class Auth extends React.PureComponent<Props, State> {
 										valuePropName: 'checked',
 										initialValue: true
 									})(<Checkbox>Remember me</Checkbox>)}
-									<a className="login-form-forgot" href="/auth/forgotpassword">
-										Forgot password
-									</a>
 									<Button
 										disabled={isLoading}
 										type="primary"

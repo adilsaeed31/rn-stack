@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Auth from './Auth';
 import Register from './Auth/Register';
+import Dashboard from './Auth/Dashboard';
 
 class App extends React.Component {
 	render() {
@@ -17,7 +19,8 @@ class App extends React.Component {
 	}
 }
 
-function PrivateRoute({ component: Component, ...rest }) {
+function PrivateRoute({ component: Component, isLogin, ...rest }) {
+	console.log(isLogin);
 	return (
 		<Route
 			{...rest}
@@ -35,8 +38,11 @@ function PrivateRoute({ component: Component, ...rest }) {
 		/>
 	);
 }
+const mapStateToProps = ({ AuthReducer }) => ({
+	status: AuthReducer.status,
+	message: AuthReducer.message,
+	data: AuthReducer.data,
+	isLoading: AuthReducer.isLoading
+});
 
-function Dashboard() {
-	return <div>Dashboard</div>;
-}
-export default App;
+export default connect(mapStateToProps)(App);
